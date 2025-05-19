@@ -1,0 +1,13 @@
+  const estadoExamen = localStorage.getItem('examenFinal');
+  const examenTexto = document.getElementById('estadoExamen');
+  const examenBtn = document.getElementById('botonExamen');
+
+  if (estadoExamen) {
+    examenTexto.textContent = estadoExamen === 'aprobado'
+      ? '✅ Examen final aprobado.'
+      : '❌ Examen final reprobado. Puedes volver a intentarlo.';
+    examenTexto.style.fontWeight = 'bold';
+    examenTexto.style.color = estadoExamen === 'aprobado' ? 'green' : 'red';
+  } else {
+    examenTexto.textContent = 'Puedes rendir el examen final ahora.';
+  }

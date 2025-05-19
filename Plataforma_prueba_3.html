@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel del Alumno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1em;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .perfil {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .perfil img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+    }
+
+    .progreso {
+      margin-top: 30px;
+    }
+
+    .barra {
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+      margin-bottom: 10px;
+    }
+
+    .progreso-avance {
+      background: #007BFF;
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .calificacion {
+      font-weight: bold;
+      color: green;
+    }
+
+    .niveles {
+      margin-top: 30px;
+    }
+
+    .nivel {
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+    }
+
+    .nivel h3 {
+      margin-top: 0;
+    }
+
+    .estado {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .estado.aprobado { color: green; }
+    .estado.reprobado { color: red; }
+    .estado.pendiente { color: orange; }
+
+    .nivel button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .nivel button:hover {
+      background-color: #218838;
+    }
+
+    .examen {
+      margin-top: 30px;
+      padding: 15px;
+      border: 2px dashed #666;
+      border-radius: 8px;
+      background: #f0f0f0;
+    }
+
+    footer {
+      background: #e0e0e0;
+      text-align: center;
+      padding: 1em;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .perfil {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Panel del Alumno</h1>
+  <nav>
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Mis Cursos</a></li>
+      <li><a href="#">Perfil</a></li>
+      <li><a href="#">Cerrar sesión</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="container">
+  <section class="perfil" aria-label="Información del alumno">
+    <div>
+      <img src="https://via.placeholder.com/120" id="fotoPerfil" alt="Foto del alumno">
+      <input type="file" accept="image/*" onchange="cambiarFoto(event)" aria-label="Subir foto de perfil">
+    </div>
+    <div class="datos">
+      <p><strong>Nombre:</strong> Juan Pérez</p>
+      <p><strong>RUT/DNI:</strong> 12.345.678-9</p>
+      <p><strong>Dirección:</strong> Calle Falsa 123</p>
+      <p><strong>País:</strong> Chile</p>
+      <p><strong>Email:</strong> juan.perez@email.com</p>
+    </div>
+  </section>
+
+  <section class="progreso">
+    <h2>Progreso del Curso</h2>
+    <div class="barra">
+      <div class="progreso-avance" id="progresoBarra"></div>
+    </div>
+    <p>Avance: <span id="progresoTexto">0%</span></p>
+  </section>
+
+  <section class="niveles" aria-label="Niveles del curso">
+    <h2>Cursos Disponibles</h2>
+    <div id="listaNiveles"></div>
+  </section>
+
+  <section class="examen" id="examenFinal" hidden>
+    <h2>📘 Examen Final</h2>
+    <p>¡Felicitaciones! Ya puedes rendir el examen final.</p>
+    <a href="examen.html"><button>Ir al Examen</button></a>
+  </section>
+</div>
+
+<footer>
+  <p>&copy; 2025 Nombre de la Institución. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  const niveles = [
+    { id: 1, titulo: 'Nivel 1 - Introducción', descripcion: 'Conceptos básicos y primeros pasos.' },
+    { id: 2, titulo: 'Nivel 2 - Intermedio', descripcion: 'Desarrollo de habilidades intermedias.' },
+    { id: 3, titulo: 'Nivel 3 - Avanzado', descripcion: 'Aplicaciones prácticas y casos complejos.' },
+    { id: 4, titulo: 'Nivel 4 - Experto', descripcion: 'Dominio completo del contenido y evaluación final.' }
+  ];
+
+  const estados = JSON.parse(localStorage.getItem('estadoNiveles')) || {};
+
+  function renderNiveles() {
+    const contenedor = document.getElementById('listaNiveles');
+    contenedor.innerHTML = '';
+    let aprobados = 0;
+
+    niveles.forEach(nivel => {
+      const estado = estados[nivel.id] || 'pendiente';
+      if (estado === 'aprobado') aprobados++;
+
+      const div = document.createElement('div');
+      div.className = 'nivel';
+      div.innerHTML = `
+        <h3>${nivel.titulo}</h3>
+        <p>${nivel.descripcion}</p>
+        <p class="estado ${estado}">Estado: ${estado === 'aprobado' ? '✅ Aprobado' : estado === 'reprobado' ? '❌ Reprobado' : '⏳ Por rendir'}</p>
+        <button onclick="rendirNivel(${nivel.id})">Rendir</button>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    actualizarProgreso((aprobados / niveles.length) * 100);
+    document.getElementById('examenFinal').hidden = aprobados !== niveles.length;
+  }
+
+  function rendirNivel(id) {
+    const resultado = Math.random() > 0.4 ? 'aprobado' : 'reprobado';
+    estados[id] = resultado;
+    localStorage.setItem('estadoNiveles', JSON.stringify(estados));
+    renderNiveles();
+  }
+
+  function actualizarProgreso(porcentaje) {
+    const barra = document.getElementById('progresoBarra');
+    const texto = document.getElementById('progresoTexto');
+    barra.style.width = porcentaje + '%';
+    texto.textContent = Math.round(porcentaje) + '%';
+  }
+
+  function cambiarFoto(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const dataURL = e.target.result;
+      localStorage.setItem('fotoPerfil', dataURL);
+      document.getElementById('fotoPerfil').src = dataURL;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  window.onload = () => {
+    const savedFoto = localStorage.getItem('fotoPerfil');
+    if (savedFoto) {
+      document.getElementById('fotoPerfil').src = savedFoto;
+    }
+    renderNiveles();
+  };
+</script>
+
+</body>
+</html>

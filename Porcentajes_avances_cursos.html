@@ -1,0 +1,37 @@
+function actualizarProgreso(porcentaje) {
+  const barra = document.getElementById('progresoBarra');
+  const texto = document.getElementById('progresoTexto');
+  barra.style.width = porcentaje + '%';
+  texto.innerText = porcentaje + '%';
+
+  // Cambiar el color del progreso según el porcentaje
+  if (porcentaje < 50) {
+    barra.style.backgroundColor = '#dc3545'; // rojo
+  } else if (porcentaje < 100) {
+    barra.style.backgroundColor = '#ffc107'; // amarillo
+  } else {
+    barra.style.backgroundColor = '#28a745'; // verde
+  }
+
+  // Actualizar estado del curso
+  const estado = document.getElementById('estadoCurso');
+  if (porcentaje === 100) {
+    estado.innerText = 'Completado';
+    estado.style.color = '#28a745';
+  } else if (porcentaje > 0) {
+    estado.innerText = 'En curso';
+    estado.style.color = '#ffc107';
+  } else {
+    estado.innerText = 'No iniciado';
+    estado.style.color = '#dc3545';
+  }
+}
+
+// Asegurar accesibilidad para elementos relacionados con el progreso
+window.addEventListener('DOMContentLoaded', () => {
+  const barra = document.getElementById('progresoBarra');
+  barra.setAttribute('role', 'progressbar');
+  barra.setAttribute('aria-valuemin', '0');
+  barra.setAttribute('aria-valuemax', '100');
+  barra.setAttribute('aria-valuenow', '0');
+});

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Examen Final</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+    h1, h2 { color: #007BFF; }
+    .pregunta { margin-bottom: 20px; }
+    .pregunta p { font-weight: bold; }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .resultado { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Examen Final</h1>
+    <form id="formExamen">
+      <div class="pregunta">
+        <p>1. ¿Qué es HTML?</p>
+        <label><input type="radio" name="p1" value="a"> Un lenguaje de programación</label><br/>
+        <label><input type="radio" name="p1" value="b"> Un lenguaje de marcado</label><br/>
+        <label><input type="radio" name="p1" value="c"> Un sistema operativo</label>
+      </div>
+      <div class="pregunta">
+        <p>2. ¿Cuál es el propósito de CSS?</p>
+        <label><input type="radio" name="p2" value="a"> Manejar datos en la base</label><br/>
+        <label><input type="radio" name="p2" value="b"> Dar estilo a las páginas web</label><br/>
+        <label><input type="radio" name="p2" value="c"> Ejecutar scripts en el servidor</label>
+      </div>
+      <div class="pregunta">
+        <p>3. ¿Qué hace JavaScript en una página web?</p>
+        <label><input type="radio" name="p3" value="a"> Controla la base de datos</label><br/>
+        <label><input type="radio" name="p3" value="b"> Estiliza elementos</label><br/>
+        <label><input type="radio" name="p3" value="c"> Agrega interactividad</label>
+      </div>
+      <button type="submit">Enviar Examen</button>
+    </form>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('formExamen').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const respuestas = {
+        p1: 'b',
+        p2: 'b',
+        p3: 'c'
+      };
+      let correctas = 0;
+      for (let key in respuestas) {
+        const seleccionada = document.querySelector(`input[name="${key}"]:checked`);
+        if (seleccionada && seleccionada.value === respuestas[key]) {
+          correctas++;
+        }
+      }
+
+      const resultado = document.getElementById('resultado');
+      if (correctas >= 2) {
+        resultado.textContent = `✅ Aprobado con ${correctas}/3 respuestas correctas.`;
+        resultado.style.color = 'green';
+        localStorage.setItem('examenFinal', 'aprobado');
+      } else {
+        resultado.textContent = `❌ Reprobado con ${correctas}/3 respuestas correctas.`;
+        resultado.style.color = 'red';
+        localStorage.setItem('examenFinal', 'reprobado');
+      }
+    });
+  </script>
+</body>
+</html>

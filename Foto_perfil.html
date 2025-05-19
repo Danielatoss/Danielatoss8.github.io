@@ -1,0 +1,18 @@
+function cambiarFoto(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataURL = e.target.result;
+    localStorage.setItem('fotoPerfil', dataURL);
+    document.getElementById('fotoPerfil').src = dataURL;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Al cargar la página
+window.onload = function() {
+  const savedFoto = localStorage.getItem('fotoPerfil');
+  if (savedFoto) {
+    document.getElementById('fotoPerfil').src = savedFoto;
+  }
+};

@@ -1,0 +1,30 @@
+window.onload = () => {
+  const niveles = ['nivel1', 'nivel2', 'nivel3', 'nivel4'];
+  let aprobados = 0;
+
+  niveles.forEach((nivel, i) => {
+    const estado = localStorage.getItem(nivel) || 'Por rendir';
+    const spanEstado = document.getElementById(`estado-${nivel}`);
+    spanEstado.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
+
+    if (estado === 'aprobado') aprobados++;
+  });
+
+  // Mostrar módulo del examen solo si aprobó todos los niveles
+  if (aprobados === 4) {
+    document.getElementById('examenFinal').hidden = false;
+  }
+
+  // Mostrar estado del examen
+  const estadoExamen = localStorage.getItem('examenFinal');
+  const examenTexto = document.getElementById('estadoExamen');
+  if (estadoExamen) {
+    examenTexto.textContent = estadoExamen === 'aprobado'
+      ? '✅ Examen final aprobado.'
+      : '❌ Examen final reprobado. Puedes volver a intentarlo.';
+    examenTexto.style.fontWeight = 'bold';
+    examenTexto.style.color = estadoExamen === 'aprobado' ? 'green' : 'red';
+  } else {
+    examenTexto.textContent = 'Puedes rendir el examen final ahora.';
+  }
+};
